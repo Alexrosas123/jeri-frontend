@@ -3,6 +3,7 @@ import AppLayout from './layouts/AppLayout';
 import Login from './pages/Login/Login';
 import EnConstruccion from './pages/EnConstruccion';
 import Dashboard from './pages/Dashboard/Dashboard';
+import Usuarios from './pages/Usuarios/Usuarios';
 
 // Pantallas internas pendientes de programar (se reemplazan una por una)
 const PENDIENTES = [
@@ -14,7 +15,6 @@ const PENDIENTES = [
   { ruta: 'ventas', titulo: 'Registrar venta', requerimientos: 'RF-14, RF-15' },
   { ruta: 'cotizaciones', titulo: 'Cotizaciones', requerimientos: 'RF-16' },
   { ruta: 'reportes', titulo: 'Reportes', requerimientos: 'RF-18' },
-  { ruta: 'usuarios', titulo: 'Usuarios y roles', requerimientos: 'RF-02, RF-03' },
 ];
 
 export default function App() {
@@ -25,6 +25,7 @@ export default function App() {
       {/* Todas estas pantallas usan el menú lateral y requieren sesión */}
       <Route element={<AppLayout />}>
         <Route path="dashboard" element={<Dashboard />} />
+        <Route path="usuarios" element={<Usuarios />} />
         {PENDIENTES.map((p) => (
           <Route
             key={p.ruta}
