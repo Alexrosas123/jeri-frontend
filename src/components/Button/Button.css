@@ -32,6 +32,29 @@
   border-color: var(--color-primario);
 }
 
+/* Cuando el botón es un enlace (<a>), quitamos el subrayado y fijamos el color */
+.boton--enlace {
+  text-decoration: none;
+}
+
+.boton--enlace.boton--primario,
+.boton--enlace.boton--primario:hover {
+  color: #fff;
+}
+
+.boton--enlace.boton--secundario,
+.boton--enlace.boton--secundario:hover {
+  color: var(--color-texto);
+}
+
+.boton--enlace.boton--primario:hover {
+  background: var(--color-primario-hover);
+}
+
+.boton--enlace.boton--secundario:hover {
+  border-color: var(--color-primario);
+}
+
 .boton--ancho-completo {
   width: 100%;
 }

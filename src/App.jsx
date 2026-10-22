@@ -2,10 +2,10 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import AppLayout from './layouts/AppLayout';
 import Login from './pages/Login/Login';
 import EnConstruccion from './pages/EnConstruccion';
+import Dashboard from './pages/Dashboard/Dashboard';
 
 // Pantallas internas pendientes de programar (se reemplazan una por una)
 const PENDIENTES = [
-  { ruta: 'dashboard', titulo: 'Dashboard', requerimientos: 'RF-21, RF-17' },
   { ruta: 'clientes', titulo: 'Clientes', requerimientos: 'RF-04' },
   { ruta: 'proveedores', titulo: 'Proveedores', requerimientos: 'RF-05' },
   { ruta: 'productos', titulo: 'Productos', requerimientos: 'RF-06, RF-07' },
@@ -24,6 +24,7 @@ export default function App() {
 
       {/* Todas estas pantallas usan el menú lateral y requieren sesión */}
       <Route element={<AppLayout />}>
+        <Route path="dashboard" element={<Dashboard />} />
         {PENDIENTES.map((p) => (
           <Route
             key={p.ruta}

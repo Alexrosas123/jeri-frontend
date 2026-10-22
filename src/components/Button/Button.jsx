@@ -1,4 +1,17 @@
+import { Link } from 'react-router-dom';
 import './Button.css';
+
+/**
+ * Enlace con apariencia de botón, para ir a otra pantalla.
+ * Uso: <BotonEnlace to="/ventas">Nueva venta</BotonEnlace>
+ */
+export function BotonEnlace({ to, variante = 'primario', children }) {
+  return (
+    <Link to={to} className={`boton boton--${variante} boton--enlace`}>
+      {children}
+    </Link>
+  );
+}
 
 /**
  * Botón del sistema (componente "Botón" en Figma).
