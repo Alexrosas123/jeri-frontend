@@ -1,0 +1,23 @@
+.estructura {
+  display: flex;
+  min-height: 100vh;
+}
+
+.estructura__contenido {
+  flex: 1;
+  min-width: 0;
+  padding: 32px 40px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+@media (max-width: 860px) {
+  .estructura {
+    flex-direction: column;
+  }
+
+  .estructura__contenido {
+    padding: 24px 16px 40px;
+  }
+}

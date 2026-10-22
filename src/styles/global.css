@@ -1,0 +1,68 @@
+/* Estilos generales que aplican a toda la aplicación */
+@import './variables.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--fuente-base);
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--color-texto);
+  background: var(--color-fondo);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--color-primario);
+}
+
+a:hover {
+  color: var(--color-primario-hover);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+/* Anillo visible al navegar con teclado */
+:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--color-primario) 35%, transparent);
+  outline-offset: 2px;
+}
+
+/* Texto solo para lectores de pantalla */
+.solo-lectores {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Etiqueta "Vista previa" que usamos mientras no hay datos reales */
+.aviso-vista-previa {
+  align-self: flex-start;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-alerta-texto);
+  background: var(--color-alerta-fondo);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
