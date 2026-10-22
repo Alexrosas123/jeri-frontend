@@ -1,0 +1,15 @@
+.etiqueta {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.etiqueta--ok { background: var(--color-ok-fondo); color: var(--color-ok-texto); }
+.etiqueta--alerta { background: var(--color-alerta-fondo); color: var(--color-alerta-texto); }
+.etiqueta--error { background: var(--color-error-fondo); color: var(--color-error-texto); }
+.etiqueta--info { background: var(--color-info-fondo); color: var(--color-info-texto); }
+.etiqueta--neutro { background: var(--color-neutro-fondo); color: var(--color-neutro-texto); }

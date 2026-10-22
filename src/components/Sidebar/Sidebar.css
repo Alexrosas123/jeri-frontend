@@ -1,0 +1,108 @@
+.menu-lateral {
+  width: var(--ancho-menu);
+  flex: none;
+  min-height: 100vh;
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding: 24px 16px;
+  background: var(--color-barra-lateral);
+  color: #fff;
+}
+
+.menu-lateral__marca {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 8px;
+}
+
+.menu-lateral__nombre {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.menu-lateral__subtitulo {
+  font-size: 12px;
+  color: var(--color-texto-menu-suave);
+}
+
+.menu-lateral__lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.menu-lateral__opcion {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 8px;
+  color: var(--color-texto-menu);
+  text-decoration: none;
+}
+
+.menu-lateral__opcion:hover {
+  background: var(--color-barra-lateral-elevado);
+  color: #fff;
+}
+
+.menu-lateral__opcion--activa,
+.menu-lateral__opcion--activa:hover {
+  background: var(--color-primario-suave);
+  color: var(--color-texto);
+  font-weight: 600;
+}
+
+.menu-lateral__usuario {
+  margin-top: auto;
+  padding: 12px;
+  border-radius: 10px;
+  background: var(--color-barra-lateral-elevado);
+}
+
+.menu-lateral__usuario-nombre {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.menu-lateral__usuario-rol {
+  font-size: 12px;
+  color: var(--color-texto-menu-suave);
+}
+
+.menu-lateral__salir {
+  margin-top: 6px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: #fff;
+  font-size: 13px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* En pantallas chicas el menú pasa arriba y las opciones se acomodan en filas */
+@media (max-width: 860px) {
+  .menu-lateral {
+    width: 100%;
+    min-height: auto;
+    position: static;
+    gap: 16px;
+  }
+
+  .menu-lateral__lista {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .menu-lateral__usuario {
+    margin-top: 0;
+  }
+}
