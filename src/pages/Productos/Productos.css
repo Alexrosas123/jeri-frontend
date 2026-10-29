@@ -1,0 +1,51 @@
+/* Ventana "Categorías y marcas" */
+.cat-marcas {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 520px) {
+  .cat-marcas {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cat-marcas__lista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cat-marcas__lista h3 {
+  font-size: 15px;
+}
+
+.cat-marcas__lista ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-control);
+}
+
+.cat-marcas__lista li {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--color-borde);
+  font-size: 14px;
+}
+
+.cat-marcas__lista li:last-child {
+  border-bottom: none;
+}
+
+.cat-marcas__agregar {
+  display: flex;
+  gap: 8px;
+}
+
+.cat-marcas__agregar .campo__input {
+  min-width: 0;
+}
