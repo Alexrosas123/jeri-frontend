@@ -70,3 +70,102 @@ textarea {
   padding: 4px 10px;
   border-radius: 999px;
 }
+
+/* ---- Piezas comunes de las pantallas de catálogo ---- */
+
+/* Barra de búsqueda y filtros arriba de las tablas */
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.filtros__buscador {
+  flex: 1 1 280px;
+  max-width: 420px;
+}
+
+.filtros__selector {
+  flex: 0 1 240px;
+}
+
+/* Mensajes de confirmación y de error */
+.mensaje {
+  padding: 12px 14px;
+  border-radius: var(--radio-control);
+}
+
+.mensaje--exito {
+  background: var(--color-ok-fondo);
+  color: var(--color-ok-texto);
+}
+
+.mensaje--error {
+  background: var(--color-error-fondo);
+  color: var(--color-error-texto);
+}
+
+/* Textos dentro de tablas */
+.texto-principal {
+  font-weight: 600;
+}
+
+.texto-secundario {
+  font-size: 13px;
+  color: var(--color-texto-suave);
+}
+
+.texto-mono {
+  font-family: var(--fuente-mono);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.celda-numero {
+  text-align: right;
+}
+
+.celda-accion {
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Formularios dentro de ventanas emergentes */
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.formulario__fila {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+@media (max-width: 520px) {
+  .formulario__fila {
+    grid-template-columns: 1fr;
+  }
+}
+
+.formulario__casilla {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.formulario__casilla input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--color-primario);
+}
+
+.formulario__nota {
+  font-size: 14px;
+  color: var(--color-texto-suave);
+}
