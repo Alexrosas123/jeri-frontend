@@ -11,8 +11,9 @@ import './Modal.css';
  *   </Modal>
  *
  * Se cierra con la tecla Esc, con el botón ✕ o dando clic fuera de la ventana.
+ * `amplio` hace la ventana más ancha (para tablas, por ejemplo en Reportes).
  */
-export default function Modal({ abierto, titulo, alCerrar, acciones, children }) {
+export default function Modal({ abierto, titulo, alCerrar, acciones, amplio = false, children }) {
   const idTitulo = useId();
   const ventana = useRef(null);
 
@@ -50,7 +51,7 @@ export default function Modal({ abierto, titulo, alCerrar, acciones, children })
 
   return (
     <div className="modal__fondo" onMouseDown={(e) => e.target === e.currentTarget && alCerrar()}>
-      <div className="modal" role="dialog" aria-modal="true" aria-labelledby={idTitulo} ref={ventana}>
+      <div className={`modal ${amplio ? 'modal--amplio' : ''}`} role="dialog" aria-modal="true" aria-labelledby={idTitulo} ref={ventana}>
         <div className="modal__encabezado">
           <h2 id={idTitulo}>{titulo}</h2>
           <button type="button" className="modal__cerrar" onClick={alCerrar} aria-label="Cerrar">

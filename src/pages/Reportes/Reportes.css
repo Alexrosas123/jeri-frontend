@@ -1,0 +1,172 @@
+/* Filtros de periodo */
+.reportes__filtros {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 200px)) max-content;
+  align-items: end;
+  gap: 12px;
+}
+
+@media (max-width: 760px) {
+  .reportes__filtros {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .reportes__filtros .campo:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .reportes__filtros .boton {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Tarjetas de reportes */
+.reportes__tarjetas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  gap: 20px;
+}
+
+.reporte {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 22px 24px;
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-tarjeta);
+}
+
+.reporte h2 {
+  font-size: 18px;
+}
+
+.reporte__descripcion {
+  color: var(--color-texto-suave);
+  font-size: 14px;
+}
+
+.reporte__dato {
+  font-size: 14px;
+}
+
+.reporte__dato span {
+  color: var(--color-texto-suave);
+}
+
+.reporte__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+  margin-left: -8px; /* alinea el texto de los botones con el resto de la tarjeta */
+}
+
+/* Ventana de detalle */
+.reporte-impreso {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reporte__encabezado-impresion {
+  display: none;
+}
+
+/* En celular la tabla del reporte se desplaza hacia los lados en vez de partir el texto */
+.reporte-impreso td {
+  white-space: nowrap;
+}
+
+.reporte__resumen {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin: 0;
+}
+
+.reporte__resumen div {
+  padding: 12px 14px;
+  border-radius: var(--radio-control);
+  background: var(--color-superficie-encabezado);
+  border: 1px solid var(--color-borde);
+}
+
+.reporte__resumen dt {
+  font-size: 13px;
+  color: var(--color-texto-suave);
+}
+
+.reporte__resumen dd {
+  margin: 4px 0 0;
+  font-family: var(--fuente-mono);
+  font-size: 18px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+/* Al imprimir (Exportar PDF) solo sale el contenido del reporte */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .reporte-impreso,
+  .reporte-impreso * {
+    visibility: visible;
+  }
+
+  .reporte-impreso {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
+  }
+
+  .reporte__encabezado-impresion {
+    display: block;
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .tabla__desplazable {
+    overflow: visible;
+  }
+}
+
+@media print {
+  body {
+    overflow: visible !important;
+  }
+
+  .modal__fondo,
+  .modal {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    box-shadow: none;
+    background: none;
+  }
+}
+
+@media print {
+  @page {
+    margin: 14mm;
+  }
+
+  .reporte-impreso td {
+    white-space: normal;
+  }
+
+  .reporte-impreso .tabla {
+    overflow: visible;
+  }
+
+  .reporte-impreso table {
+    font-size: 12px;
+  }
+
+  .reporte-impreso th,
+  .reporte-impreso td {
+    padding: 8px 10px;
+  }
+}
