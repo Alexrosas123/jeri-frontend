@@ -1,0 +1,164 @@
+/* Medidas tomadas del frame "01 · Iniciar sesión (RF-01)" en Figma */
+.login {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ---- Panel izquierdo (marca) ---- */
+.login__marca {
+  width: 520px;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 48px;
+  padding: 56px;
+  background: var(--color-barra-lateral);
+  color: #fff;
+}
+
+.login__logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.login__mensaje {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 400px;
+}
+
+.login__mensaje h1 {
+  font-size: 44px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.login__mensaje p {
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--color-texto-menu);
+}
+
+.login__empresa {
+  font-size: 14px;
+  color: var(--color-texto-menu-suave);
+}
+
+/* ---- Panel derecho (formulario) ---- */
+.login__panel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+}
+
+.login__formulario {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.login__titulo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.login__titulo h2 {
+  font-size: 30px;
+  letter-spacing: -0.01em;
+}
+
+.login__titulo p {
+  font-size: 16px;
+  color: var(--color-texto-suave);
+}
+
+.login__mostrar {
+  min-height: 36px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  color: var(--color-primario);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.login__mostrar:hover {
+  background: var(--color-primario-suave);
+}
+
+.login__opciones {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.login__recordarme {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.login__recordarme input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--color-primario);
+}
+
+.login__error {
+  padding: 12px 14px;
+  border-radius: var(--radio-control);
+  background: var(--color-error-fondo);
+  color: var(--color-error-texto);
+  font-size: 14px;
+}
+
+.login__nota {
+  text-align: center;
+  font-size: 13px;
+  color: var(--color-texto-suave);
+}
+
+/* ---- Tableta y celular: el panel de marca pasa arriba y se compacta ---- */
+@media (max-width: 960px) {
+  .login {
+    flex-direction: column;
+  }
+
+  .login__marca {
+    width: 100%;
+    gap: 16px;
+    padding: 24px;
+  }
+
+  .login__mensaje h1 {
+    font-size: 26px;
+  }
+
+  .login__mensaje p,
+  .login__empresa {
+    display: none;
+  }
+
+  .login__panel {
+    align-items: flex-start;
+    padding: 32px 16px 48px;
+  }
+}

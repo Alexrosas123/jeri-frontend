@@ -1,0 +1,58 @@
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.campo__etiqueta {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-texto-suave);
+}
+
+.campo__caja {
+  position: relative;
+}
+
+.campo__input {
+  width: 100%;
+  min-height: var(--alto-control);
+  padding: 0 12px;
+  font-size: 15px;
+  background: var(--color-superficie);
+  border: 1.5px solid var(--color-borde-campo);
+  border-radius: var(--radio-control);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.campo__input::placeholder {
+  color: var(--color-texto-suave);
+}
+
+.campo__input:focus {
+  outline: none;
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primario) 18%, transparent);
+}
+
+.campo__input--error {
+  border-color: var(--color-error-texto);
+}
+
+.campo__input--con-accion {
+  padding-right: 96px;
+}
+
+.campo__accion {
+  position: absolute;
+  top: 0;
+  right: 4px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.campo__error {
+  font-size: 13px;
+  color: var(--color-error-texto);
+}

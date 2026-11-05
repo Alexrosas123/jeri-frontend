@@ -1,0 +1,63 @@
+/* Fila para agregar un producto en "Nueva cotización" */
+.cotizacion__agregar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 110px auto;
+  align-items: start;
+  gap: 12px;
+  margin: 0;
+  padding: 16px;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-control);
+}
+
+.cotizacion__agregar legend {
+  padding: 0 6px;
+}
+
+/* El botón queda alineado con los campos (debajo de su etiqueta) */
+.cotizacion__agregar > .boton {
+  margin-top: 26px;
+}
+
+@media (max-width: 520px) {
+  .cotizacion__agregar {
+    grid-template-columns: 1fr;
+  }
+
+  .cotizacion__agregar > .boton {
+    margin-top: 0;
+  }
+}
+
+.cotizacion__total {
+  text-align: right;
+  font-size: 16px;
+}
+
+.cotizacion__total strong {
+  font-size: 20px;
+}
+
+/* Datos generales en el detalle */
+.cotizacion__datos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px 20px;
+  margin: 0;
+}
+
+.cotizacion__datos dt {
+  font-size: 13px;
+  color: var(--color-texto-suave);
+}
+
+.cotizacion__datos dd {
+  margin: 2px 0 0;
+  font-weight: 600;
+}
+
+.cotizacion__detalle {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}

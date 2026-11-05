@@ -1,0 +1,51 @@
+.inventario__aviso {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px 14px;
+  border-radius: var(--radio-control);
+  background: var(--color-alerta-fondo);
+  color: var(--color-alerta-texto);
+}
+
+.inventario__pestanas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.inventario__pestana {
+  min-height: 44px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  background: none;
+  color: var(--color-texto-suave);
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.inventario__pestana:hover {
+  color: var(--color-texto);
+}
+
+.inventario__pestana--activa {
+  background: var(--color-primario-suave);
+  color: var(--color-texto);
+  font-weight: 700;
+  box-shadow: inset 0 -3px 0 var(--color-primario);
+}
+
+.inventario__mas {
+  color: var(--color-ok-texto);
+}
+
+.inventario__menos {
+  color: var(--color-error-texto);
+}
+
+.inventario__negativo {
+  color: var(--color-error-texto);
+}

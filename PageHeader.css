@@ -1,0 +1,29 @@
+.encabezado-pagina {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.encabezado-pagina__texto {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.encabezado-pagina__titulo {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.encabezado-pagina__descripcion {
+  color: var(--color-texto-suave);
+}
+
+.encabezado-pagina__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}

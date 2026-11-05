@@ -1,0 +1,68 @@
+.tabla {
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-tarjeta);
+  overflow: hidden;
+}
+
+.tabla__desplazable {
+  position: relative; /* mantiene dentro de la tabla los textos ocultos para lectores de pantalla */
+  overflow-x: auto;
+}
+
+.tabla table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.tabla th {
+  text-align: left;
+  padding: 12px 20px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--color-texto-suave);
+  background: var(--color-superficie-encabezado);
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.tabla td {
+  padding: 14px 20px;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.tabla tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.tabla tbody tr:hover td {
+  background: var(--color-superficie-encabezado);
+}
+
+/* Celda vacía (por ejemplo, cuando una búsqueda no encuentra nada) */
+.tabla__vacia {
+  text-align: center;
+  color: var(--color-texto-suave);
+  padding: 32px 20px !important;
+}
+
+/* Botón con apariencia de enlace, para acciones dentro de la tabla (Editar, Ver detalle) */
+.tabla__accion {
+  min-height: 36px;
+  padding: 0 8px;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  color: var(--color-primario);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tabla__accion:hover {
+  background: var(--color-primario-suave);
+}

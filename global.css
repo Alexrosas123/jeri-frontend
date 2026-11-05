@@ -1,0 +1,274 @@
+/* Estilos generales que aplican a toda la aplicación */
+@import './variables.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--fuente-base);
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--color-texto);
+  background: var(--color-fondo);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--color-primario);
+}
+
+a:hover {
+  color: var(--color-primario-hover);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+/* Anillo visible al navegar con teclado */
+:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--color-primario) 35%, transparent);
+  outline-offset: 2px;
+}
+
+/* Texto solo para lectores de pantalla */
+.solo-lectores {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Etiqueta "Vista previa" que usamos mientras no hay datos reales */
+.aviso-vista-previa {
+  align-self: flex-start;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-alerta-texto);
+  background: var(--color-alerta-fondo);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+/* ---- Piezas comunes de las pantallas de catálogo ---- */
+
+/* Barra de búsqueda y filtros arriba de las tablas */
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.filtros__buscador {
+  flex: 1 1 280px;
+  max-width: 420px;
+}
+
+.filtros__selector {
+  flex: 0 1 240px;
+}
+
+/* Mensajes de confirmación y de error */
+.mensaje {
+  padding: 12px 14px;
+  border-radius: var(--radio-control);
+}
+
+.mensaje--exito {
+  background: var(--color-ok-fondo);
+  color: var(--color-ok-texto);
+}
+
+.mensaje--error {
+  background: var(--color-error-fondo);
+  color: var(--color-error-texto);
+}
+
+/* Textos dentro de tablas */
+.texto-principal {
+  font-weight: 600;
+}
+
+.texto-secundario {
+  font-size: 13px;
+  color: var(--color-texto-suave);
+}
+
+.texto-mono {
+  font-family: var(--fuente-mono);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.celda-numero {
+  text-align: right;
+}
+
+.celda-accion {
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Formularios dentro de ventanas emergentes */
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.formulario__fila {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+@media (max-width: 520px) {
+  .formulario__fila {
+    grid-template-columns: 1fr;
+  }
+}
+
+.formulario__casilla {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.formulario__casilla input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--color-primario);
+}
+
+.formulario__nota {
+  font-size: 14px;
+  color: var(--color-texto-suave);
+}
+
+/* ---- Pantallas de operación: Registrar compra y Registrar venta ---- */
+
+/* La tarjeta usa la clase .tabla (borde y esquinas) y se divide en secciones */
+.operacion {
+  max-width: 920px;
+}
+
+.operacion__cabecera,
+.operacion__agregar {
+  padding: 20px;
+}
+
+.operacion__cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 14px;
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.operacion__cabecera .campo {
+  flex: 0 1 360px;
+  min-width: 0;
+}
+
+.operacion__agregar {
+  border-top: 1px solid var(--color-borde);
+}
+
+.operacion__pie {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px;
+  border-top: 1px solid var(--color-borde);
+  background: var(--color-superficie-encabezado);
+}
+
+.operacion__pie-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
+}
+
+.operacion__total {
+  font-family: var(--fuente-mono);
+  font-size: 28px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.operacion__total-etiqueta {
+  display: block;
+  font-size: 14px;
+  color: var(--color-texto-suave);
+}
+
+/* Campo chico de cantidad dentro de la tabla */
+.operacion__cantidad {
+  width: 88px;
+  min-height: 40px;
+  text-align: right;
+}
+
+/* Botón ✕ para quitar una línea */
+.operacion__quitar {
+  width: 40px;
+  height: 40px;
+  display: inline-grid;
+  place-items: center;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  color: var(--color-error-texto);
+  cursor: pointer;
+}
+
+.operacion__quitar:hover {
+  background: var(--color-error-fondo);
+}
+
+.operacion__aviso-origen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: var(--radio-control);
+  background: var(--color-info-fondo);
+  color: var(--color-info-texto);
+  max-width: 920px;
+}
+
+/* Subtítulo para secciones como "Compras recientes" */
+.subtitulo-seccion {
+  font-size: 18px;
+  margin-top: 12px;
+}

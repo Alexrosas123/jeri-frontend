@@ -1,0 +1,50 @@
+/*
+  Variables de diseño del sistema.
+  Son los mismos valores de la colección "Medidental · Colores" en Figma:
+  si el equipo cambia un color, se cambia aquí y se actualiza en toda la app.
+*/
+:root {
+  /* Colores principales */
+  --color-primario: #0b76b8;
+  --color-primario-hover: #09639a;
+  --color-primario-suave: #e3f2fb;
+
+  /* Menú lateral */
+  --color-barra-lateral: #0c3d5e;
+  --color-barra-lateral-elevado: #134d72;
+  --color-texto-menu: #cfe6f5;
+  --color-texto-menu-suave: #a3cbe5;
+
+  /* Fondos y bordes */
+  --color-fondo: #f2f7fb;
+  --color-superficie: #ffffff;
+  --color-superficie-encabezado: #f6fafd;
+  --color-borde: #dde8f0;
+  --color-borde-campo: #c5d6e3;
+
+  /* Texto */
+  --color-texto: #13263a;
+  --color-texto-suave: #4a6072;
+
+  /* Estados (etiquetas) */
+  --color-ok-fondo: #e3f3f1;
+  --color-ok-texto: #0b5e5f;
+  --color-alerta-fondo: #fdf1e3;
+  --color-alerta-texto: #8a4b0b;
+  --color-error-fondo: #fcecea;
+  --color-error-texto: #a3261b;
+  --color-info-fondo: #e3f2fb;
+  --color-info-texto: #0a5f94;
+  --color-neutro-fondo: #eef1f1;
+  --color-neutro-texto: #4a6072;
+
+  /* Tipografía */
+  --fuente-base: 'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --fuente-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  /* Medidas */
+  --radio-control: 10px; /* botones y campos */
+  --radio-tarjeta: 14px; /* tarjetas y tablas */
+  --alto-control: 44px; /* alto mínimo de botones y campos */
+  --ancho-menu: 232px;
+}

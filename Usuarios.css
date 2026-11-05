@@ -1,0 +1,65 @@
+/* Medidas tomadas de los frames "11 · Usuarios y roles" y "11b · Usuarios – Nuevo usuario" en Figma */
+.usuarios__filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.usuarios__buscador {
+  max-width: 420px;
+}
+
+.usuarios__nombre {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.usuarios__correo {
+  font-size: 13px;
+  color: var(--color-texto-suave);
+}
+
+.usuarios__celda-accion {
+  text-align: right;
+}
+
+.usuarios__formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.usuarios__activo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.usuarios__activo input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--color-primario);
+}
+
+.usuarios__nota {
+  font-size: 14px;
+  color: var(--color-texto-suave);
+}
+
+.usuarios__mensaje {
+  padding: 12px 14px;
+  border-radius: var(--radio-control);
+  background: var(--color-ok-fondo);
+  color: var(--color-ok-texto);
+}
+
+.usuarios__error {
+  padding: 12px 14px;
+  border-radius: var(--radio-control);
+  background: var(--color-error-fondo);
+  color: var(--color-error-texto);
+}
