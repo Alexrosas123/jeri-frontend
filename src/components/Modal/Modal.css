@@ -62,3 +62,7 @@
   flex-wrap: wrap;
   gap: 10px;
 }
+
+.modal--amplio {
+  max-width: 760px;
+}

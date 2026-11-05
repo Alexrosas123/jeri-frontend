@@ -13,6 +13,9 @@
   Sin VITE_API_URL se usan DATOS DE EJEMPLO que viven mientras la página está abierta.
 */
 
+import { obtenerSesion } from './auth';
+import { haceDias } from '../utils/fechas';
+
 const API_URL = import.meta.env.VITE_API_URL;
 const esperar = (ms) => new Promise((resolver) => setTimeout(resolver, ms));
 
@@ -52,10 +55,11 @@ let productos = [
   { id: 8, sku: 'ED-002', nombre: 'Baumanómetro aneroide', categoriaId: 4, marcaId: 2, precio: 650, existencia: 14, stockMinimo: 5 },
 ];
 
+// Las fechas de ejemplo se calculan desde hoy para que siempre haya datos en "Este mes" (Reportes)
 let movimientos = [
-  { id: 1, productoId: 2, tipo: 'entrada', cantidad: 24, motivo: 'Compra', nota: '', fecha: '2026-10-20T10:15:00' },
-  { id: 2, productoId: 3, tipo: 'salida', cantidad: 20, motivo: 'Venta', nota: '', fecha: '2026-10-21T12:40:00' },
-  { id: 3, productoId: 5, tipo: 'salida', cantidad: 4, motivo: 'Venta', nota: '', fecha: '2026-10-22T09:05:00' },
+  { id: 1, productoId: 2, tipo: 'entrada', cantidad: 24, motivo: 'Compra', nota: 'COM-0002', usuario: 'Usuario de ejemplo', fecha: haceDias(12, 10, 15) },
+  { id: 2, productoId: 3, tipo: 'salida', cantidad: 20, motivo: 'Venta', nota: 'VTA-0002', usuario: 'Usuario de ejemplo', fecha: haceDias(9, 12, 40) },
+  { id: 3, productoId: 5, tipo: 'salida', cantidad: 4, motivo: 'Venta', nota: 'VTA-0004', usuario: 'Usuario de ejemplo', fecha: haceDias(2, 9, 5) },
 ];
 
 // ---------- Productos ----------
@@ -138,7 +142,8 @@ export async function registrarMovimiento({ productoId, tipo, cantidad, motivo, 
 
     const actualizado = { ...producto, existencia: nuevaExistencia };
     productos = productos.map((p) => (p.id === productoId ? actualizado : p));
-    const movimiento = { id: Date.now(), productoId, tipo, cantidad, motivo, nota, fecha: new Date().toISOString() };
+    const usuario = obtenerSesion()?.nombre ?? 'Sin usuario';
+    const movimiento = { id: Date.now() + productoId, productoId, tipo, cantidad, motivo, nota, usuario, fecha: new Date().toISOString() };
     movimientos = [movimiento, ...movimientos];
     return { producto: actualizado, movimiento };
   }

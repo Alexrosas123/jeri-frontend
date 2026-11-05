@@ -169,3 +169,106 @@ textarea {
   font-size: 14px;
   color: var(--color-texto-suave);
 }
+
+/* ---- Pantallas de operación: Registrar compra y Registrar venta ---- */
+
+/* La tarjeta usa la clase .tabla (borde y esquinas) y se divide en secciones */
+.operacion {
+  max-width: 920px;
+}
+
+.operacion__cabecera,
+.operacion__agregar {
+  padding: 20px;
+}
+
+.operacion__cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 14px;
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.operacion__cabecera .campo {
+  flex: 0 1 360px;
+  min-width: 0;
+}
+
+.operacion__agregar {
+  border-top: 1px solid var(--color-borde);
+}
+
+.operacion__pie {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px;
+  border-top: 1px solid var(--color-borde);
+  background: var(--color-superficie-encabezado);
+}
+
+.operacion__pie-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
+}
+
+.operacion__total {
+  font-family: var(--fuente-mono);
+  font-size: 28px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.operacion__total-etiqueta {
+  display: block;
+  font-size: 14px;
+  color: var(--color-texto-suave);
+}
+
+/* Campo chico de cantidad dentro de la tabla */
+.operacion__cantidad {
+  width: 88px;
+  min-height: 40px;
+  text-align: right;
+}
+
+/* Botón ✕ para quitar una línea */
+.operacion__quitar {
+  width: 40px;
+  height: 40px;
+  display: inline-grid;
+  place-items: center;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  color: var(--color-error-texto);
+  cursor: pointer;
+}
+
+.operacion__quitar:hover {
+  background: var(--color-error-fondo);
+}
+
+.operacion__aviso-origen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: var(--radio-control);
+  background: var(--color-info-fondo);
+  color: var(--color-info-texto);
+  max-width: 920px;
+}
+
+/* Subtítulo para secciones como "Compras recientes" */
+.subtitulo-seccion {
+  font-size: 18px;
+  margin-top: 12px;
+}

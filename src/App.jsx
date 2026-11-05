@@ -1,21 +1,16 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import AppLayout from './layouts/AppLayout';
 import Login from './pages/Login/Login';
-import EnConstruccion from './pages/EnConstruccion';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Usuarios from './pages/Usuarios/Usuarios';
 import Clientes from './pages/Clientes/Clientes';
 import Proveedores from './pages/Proveedores/Proveedores';
 import Productos from './pages/Productos/Productos';
 import Inventario from './pages/Inventario/Inventario';
-
-// Pantallas internas pendientes de programar (se reemplazan una por una)
-const PENDIENTES = [
-  { ruta: 'compras', titulo: 'Registrar compra', requerimientos: 'RF-11, RF-13' },
-  { ruta: 'ventas', titulo: 'Registrar venta', requerimientos: 'RF-14, RF-15' },
-  { ruta: 'cotizaciones', titulo: 'Cotizaciones', requerimientos: 'RF-16' },
-  { ruta: 'reportes', titulo: 'Reportes', requerimientos: 'RF-18' },
-];
+import Compras from './pages/Compras/Compras';
+import Ventas from './pages/Ventas/Ventas';
+import Cotizaciones from './pages/Cotizaciones/Cotizaciones';
+import Reportes from './pages/Reportes/Reportes';
 
 export default function App() {
   return (
@@ -30,13 +25,10 @@ export default function App() {
         <Route path="productos" element={<Productos />} />
         <Route path="inventario" element={<Inventario />} />
         <Route path="usuarios" element={<Usuarios />} />
-        {PENDIENTES.map((p) => (
-          <Route
-            key={p.ruta}
-            path={p.ruta}
-            element={<EnConstruccion titulo={p.titulo} requerimientos={p.requerimientos} />}
-          />
-        ))}
+        <Route path="compras" element={<Compras />} />
+        <Route path="ventas" element={<Ventas />} />
+        <Route path="cotizaciones" element={<Cotizaciones />} />
+        <Route path="reportes" element={<Reportes />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/login" replace />} />
