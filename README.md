@@ -7,9 +7,6 @@ Diseño de referencia en Figma: https://www.figma.com/design/Ers1oxsks6TMnhkUB5U
 
 
 ### Conexión con el back-end
-
-Por ahora el login funciona en **modo simulación**: con cualquier correo válido y una contraseña de 6 caracteres o más, entra al sistema.
-
-
+El backend ya se encuentra conectado a frontend, el unico requisito necesario es ejecutar el template de la BD e ingresar con el usuario - contraseña prediseñado en un ambiente local, para posteriores versiones se tendra que generar la conexion con la BD con los usuarios que se encuentren en la misma.
 
 

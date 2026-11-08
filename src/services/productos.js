@@ -134,6 +134,7 @@ export async function obtenerInventario() {
  * Regresa { producto, movimiento } con la existencia ya actualizada.
  */
 export async function registrarMovimiento({ productoId, tipo, cantidad, motivo, nota }) {
+  const usuario = obtenerSesion()?.nombre ?? 'Sin usuario';
   if (!API_URL) {
     await esperar(300);
     const producto = productos.find((p) => p.id === productoId);
@@ -142,13 +143,12 @@ export async function registrarMovimiento({ productoId, tipo, cantidad, motivo, 
 
     const actualizado = { ...producto, existencia: nuevaExistencia };
     productos = productos.map((p) => (p.id === productoId ? actualizado : p));
-    const usuario = obtenerSesion()?.nombre ?? 'Sin usuario';
     const movimiento = { id: Date.now() + productoId, productoId, tipo, cantidad, motivo, nota, usuario, fecha: new Date().toISOString() };
     movimientos = [movimiento, ...movimientos];
     return { producto: actualizado, movimiento };
   }
   return pedir('/api/inventory/movements', {
     method: 'POST',
-    body: JSON.stringify({ productoId, tipo, cantidad, motivo, nota }),
+    body: JSON.stringify({ productoId, tipo, cantidad, motivo, nota, usuario }),
   });
 }
