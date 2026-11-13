@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Badge from '../../components/Badge/Badge';
 import Button from '../../components/Button/Button';
 import ContactoForm from '../../components/ContactoForm/ContactoForm';
@@ -96,13 +97,16 @@ export default function Clientes() {
           {visibles.map((c) => (
             <tr key={c.id}>
               <td>
-                <p className="texto-principal">{c.nombre}</p>
+                <Link to={`/clientes/${c.id}`} className="texto-principal enlace-tabla">{c.nombre}</Link>
                 <p className="texto-secundario texto-mono">{c.rfc}</p>
               </td>
               <td className="texto-secundario">{c.telefono || '—'}</td>
               <td className="texto-secundario">{c.correo || '—'}</td>
               <td><Badge tipo={c.activo ? 'ok' : 'neutro'}>{c.activo ? 'Activo' : 'Inactivo'}</Badge></td>
               <td className="celda-accion">
+                <Link to={`/clientes/${c.id}`} className="tabla__accion">
+                  Ver historial<span className="solo-lectores"> de {c.nombre}</span>
+                </Link>
                 <button type="button" className="tabla__accion" onClick={() => setFormulario(c)}>
                   Editar<span className="solo-lectores"> a {c.nombre}</span>
                 </button>
@@ -115,7 +119,7 @@ export default function Clientes() {
       {formulario && (
         <ContactoForm
           tipo="cliente"
-          conDireccion
+          conDirecciones
           registro={formulario === 'nuevo' ? null : formulario}
           existentes={lista}
           alGuardar={guardar}

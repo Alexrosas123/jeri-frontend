@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Badge from '../../components/Badge/Badge';
-import { BotonEnlace } from '../../components/Button/Button';
 import KpiCard from '../../components/KpiCard/KpiCard';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import { obtenerDashboard } from '../../services/dashboard';
@@ -31,18 +30,7 @@ export default function Dashboard() {
 
   return (
     <>
-      <PageHeader
-        titulo="Dashboard"
-        datosDeEjemplo={datos?.esEjemplo}
-        acciones={
-          <>
-            <BotonEnlace to="/compras" variante="secundario">
-              Nueva compra
-            </BotonEnlace>
-            <BotonEnlace to="/ventas">Nueva venta</BotonEnlace>
-          </>
-        }
-      />
+      <PageHeader titulo="Dashboard" datosDeEjemplo={datos?.esEjemplo} />
 
       {error && (
         <p className="dashboard__error" role="alert">

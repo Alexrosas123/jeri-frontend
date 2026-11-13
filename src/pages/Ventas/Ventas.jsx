@@ -6,10 +6,11 @@ import Field from '../../components/Field/Field';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import Table from '../../components/Table/Table';
 import useLista from '../../hooks/useLista';
-import { clientes } from '../../services/clientes';
+import { clientes, direccionesDe } from '../../services/clientes';
 import { obtenerInventario } from '../../services/productos';
 import { listarVentas, registrarVenta, usaEjemplo } from '../../services/ventas';
 import { formatearFecha, formatearPesos, totalDeLineas } from '../../utils/formato';
+import { estaDisponible } from '../../utils/inventario';
 
 async function cargarPantalla() {
   const [listaClientes, inventario, ventas] = await Promise.all([clientes.listar(), obtenerInventario(), listarVentas()]);
@@ -18,9 +19,10 @@ async function cargarPantalla() {
 
 /** Si venimos de "Convertir en venta" (Cotizaciones), la venta empieza con esos datos. */
 function formularioInicial(cotizacion) {
-  if (!cotizacion) return { clienteId: '', lineas: [], cotizacion: null };
+  if (!cotizacion) return { clienteId: '', direccion: null, lineas: [], cotizacion: null };
   return {
     clienteId: String(cotizacion.clienteId),
+    direccion: null, // null = la primera dirección del cliente
     lineas: cotizacion.lineas.map((l) => ({ ...l, cantidad: String(l.cantidad) })),
     cotizacion: { id: cotizacion.id, folio: cotizacion.folio },
   };
@@ -40,6 +42,9 @@ export default function Ventas() {
   const activos = datos.clientes.filter((c) => c.activo || String(c.id) === formulario.clienteId);
   const producto = (id) => datos.productos.find((p) => p.id === id);
   const nombreCliente = (id) => datos.clientes.find((c) => c.id === id)?.nombre ?? 'Cliente';
+  // Direcciones de entrega del cliente elegido; si no se ha escogido una, se usa la primera
+  const direcciones = direccionesDe(datos.clientes.find((c) => String(c.id) === formulario.clienteId));
+  const direccionElegida = formulario.direccion ?? direcciones[0] ?? '';
   // En el formulario la cantidad es texto (lo que escribe el usuario); para sumar la convertimos a número
   const lineasNumericas = formulario.lineas.map((l) => ({ ...l, cantidad: Number(l.cantidad) || 0 }));
   const total = totalDeLineas(lineasNumericas);
@@ -107,6 +112,7 @@ export default function Ventas() {
         clienteId: Number(formulario.clienteId),
         lineas: lineasNumericas,
         cotizacionId: formulario.cotizacion?.id,
+        direccionEntrega: direccionElegida,
       });
       const { productos } = await obtenerInventario();
       setDatos((anterior) => ({ ...anterior, productos, ventas: [venta, ...anterior.ventas] }));
@@ -147,11 +153,20 @@ export default function Ventas() {
             placeholderOpcion={cargando ? 'Cargando clientes…' : 'Seleccionar cliente'}
             value={formulario.clienteId}
             onChange={(e) => {
-              setFormulario((anterior) => ({ ...anterior, clienteId: e.target.value }));
+              setFormulario((anterior) => ({ ...anterior, clienteId: e.target.value, direccion: null }));
               setErrores((anterior) => ({ ...anterior, clienteId: undefined }));
             }}
             error={errores.clienteId}
           />
+          {formulario.clienteId && (
+            <Field
+              etiqueta="Dirección de entrega"
+              opciones={direcciones.map((d) => ({ valor: d, texto: d }))}
+              placeholderOpcion="Recoge en mostrador (sin envío)"
+              value={direccionElegida}
+              onChange={(e) => setFormulario((anterior) => ({ ...anterior, direccion: e.target.value }))}
+            />
+          )}
         </div>
 
         <div className="tabla__desplazable">
@@ -268,7 +283,7 @@ export default function Ventas() {
 
       {buscando && (
         <BuscadorProductos
-          productos={datos.productos}
+          productos={datos.productos.filter(estaDisponible)}
           enLista={enLista}
           validarExistencia
           alTerminar={agregarSeleccion}

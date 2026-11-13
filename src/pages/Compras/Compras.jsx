@@ -9,6 +9,7 @@ import { listarCompras, marcarRecibida, registrarCompra, usaEjemplo } from '../.
 import { obtenerInventario } from '../../services/productos';
 import { proveedores } from '../../services/proveedores';
 import { formatearFecha, formatearPesos, totalDeLineas } from '../../utils/formato';
+import { estaDisponible } from '../../utils/inventario';
 import LineaCompraForm from './LineaCompraForm';
 
 async function cargarPantalla() {
@@ -236,7 +237,7 @@ export default function Compras() {
       </Table>
 
       {agregando && (
-        <LineaCompraForm productos={datos.productos} alAgregar={agregarLinea} alCerrar={() => setAgregando(false)} />
+        <LineaCompraForm productos={datos.productos.filter(estaDisponible)} alAgregar={agregarLinea} alCerrar={() => setAgregando(false)} />
       )}
     </>
   );

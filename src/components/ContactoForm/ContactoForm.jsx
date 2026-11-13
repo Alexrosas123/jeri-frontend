@@ -8,7 +8,7 @@ import { esCorreoValido, esRfcValido, esTelefonoValido, limpiarTextos } from '..
  * Ventana emergente para crear o editar un cliente o un proveedor.
  * Ambos comparten casi los mismos datos; las diferencias se activan con:
  *   - `conContacto`: muestra "Persona de contacto" (proveedores)
- *   - `conDireccion`: muestra "Dirección" (clientes)
+ *   - `conDirecciones`: muestra las direcciones de entrega, puede haber varias (clientes)
  *
  * `existentes` sirve para avisar si el RFC ya está registrado.
  */
@@ -17,14 +17,17 @@ export default function ContactoForm({
   registro,
   existentes,
   conContacto = false,
-  conDireccion = false,
+  conDirecciones = false,
   alGuardar,
   alCerrar,
 }) {
   const editando = Boolean(registro);
-  const [datos, setDatos] = useState(
-    registro ?? { nombre: '', rfc: '', contacto: '', telefono: '', correo: '', direccion: '', activo: true },
-  );
+  const [datos, setDatos] = useState(() => {
+    const base = registro ?? { nombre: '', rfc: '', contacto: '', telefono: '', correo: '', activo: true };
+    // Siempre mostramos al menos un campo de dirección vacío para escribir
+    const direcciones = registro?.direcciones ?? (registro?.direccion ? [registro.direccion] : []);
+    return { ...base, direcciones: direcciones.length ? direcciones : [''] };
+  });
   const [errores, setErrores] = useState({});
   const [guardando, setGuardando] = useState(false);
   const [errorGeneral, setErrorGeneral] = useState('');
@@ -35,6 +38,18 @@ export default function ContactoForm({
     setDatos((anterior) => ({ ...anterior, [campo]: valor }));
     setErrores((anterior) => ({ ...anterior, [campo]: undefined }));
   };
+
+  const cambiarDireccion = (indice) => (evento) =>
+    setDatos((anterior) => ({
+      ...anterior,
+      direcciones: anterior.direcciones.map((d, i) => (i === indice ? evento.target.value : d)),
+    }));
+  const agregarDireccion = () => setDatos((anterior) => ({ ...anterior, direcciones: [...anterior.direcciones, ''] }));
+  const quitarDireccion = (indice) =>
+    setDatos((anterior) => {
+      const direcciones = anterior.direcciones.filter((_, i) => i !== indice);
+      return { ...anterior, direcciones: direcciones.length ? direcciones : [''] };
+    });
 
   function validar(d) {
     const e = {};
@@ -58,8 +73,10 @@ export default function ContactoForm({
     setGuardando(true);
     setErrorGeneral('');
     try {
-      const limpio = limpiarTextos(datos);
-      await alGuardar({ ...limpio, rfc: limpio.rfc.toUpperCase() });
+      const { direccion: _anterior, direcciones, ...resto } = limpiarTextos(datos); // `direccion` era el campo viejo
+      const limpio = { ...resto, rfc: resto.rfc.toUpperCase() };
+      if (conDirecciones) limpio.direcciones = direcciones.map((d) => d.trim()).filter(Boolean);
+      await alGuardar(limpio);
     } catch (error) {
       setErrorGeneral(error.message);
       setGuardando(false);
@@ -128,13 +145,37 @@ export default function ContactoForm({
             placeholder="correo@ejemplo.com"
           />
         </div>
-        {conDireccion && (
-          <Field
-            etiqueta="Dirección (opcional)"
-            value={datos.direccion}
-            onChange={cambiar('direccion')}
-            placeholder="Calle, número, colonia, ciudad"
-          />
+        {conDirecciones && (
+          <fieldset className="direcciones">
+            <legend className="campo__etiqueta">Direcciones de entrega (opcional)</legend>
+            {datos.direcciones.map((direccion, i) => (
+              <div key={i} className="direcciones__fila">
+                <label htmlFor={`direccion-${i}`} className="solo-lectores">Dirección de entrega {i + 1}</label>
+                <input
+                  id={`direccion-${i}`}
+                  className="campo__input"
+                  value={direccion}
+                  onChange={cambiarDireccion(i)}
+                  placeholder="Calle, número, colonia, ciudad"
+                />
+                {(datos.direcciones.length > 1 || direccion) && (
+                  <button
+                    type="button"
+                    className="operacion__quitar"
+                    onClick={() => quitarDireccion(i)}
+                    aria-label={`Quitar dirección ${i + 1}`}
+                  >
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+                      <path d="M6 6l12 12M18 6L6 18" />
+                    </svg>
+                  </button>
+                )}
+              </div>
+            ))}
+            <button type="button" className="tabla__accion direcciones__agregar" onClick={agregarDireccion}>
+              + Agregar otra dirección
+            </button>
+          </fieldset>
         )}
         {editando && (
           <label className="formulario__casilla">

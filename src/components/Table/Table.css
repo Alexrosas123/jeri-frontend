@@ -66,3 +66,26 @@
 .tabla__accion:hover {
   background: var(--color-primario-suave);
 }
+
+/* Cuando la acción es un enlace (por ejemplo "Ver") se ve igual que los botones */
+a.tabla__accion {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+/* Nombre que lleva al detalle (producto, cliente) */
+.enlace-tabla {
+  color: var(--color-texto);
+  text-decoration: none;
+}
+
+.enlace-tabla:hover {
+  color: var(--color-primario);
+  text-decoration: underline;
+}
+
+/* Fila de un registro inhabilitado */
+.fila--apagada td > *:not(.etiqueta):not(.tabla__accion) {
+  opacity: 0.6;
+}

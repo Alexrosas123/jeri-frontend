@@ -3,10 +3,10 @@ import Button from '../../components/Button/Button';
 import Field from '../../components/Field/Field';
 import Modal from '../../components/Modal/Modal';
 
-const VACIO = { nombre: '', sku: '', categoriaId: '', marcaId: '', precio: '', stockMinimo: '' };
+const VACIO = { nombre: '', sku: '', categoriaId: '', marcaId: '', proveedorId: '', precio: '', stockMinimo: '', activo: true };
 
 /** Ventana emergente para crear o editar un producto (RF-06) */
-export default function ProductoForm({ producto, productos, categorias, marcas, alGuardar, alCerrar }) {
+export default function ProductoForm({ producto, productos, categorias, marcas, proveedores = [], alGuardar, alCerrar }) {
   const editando = Boolean(producto);
   const [datos, setDatos] = useState(() =>
     producto
@@ -14,6 +14,8 @@ export default function ProductoForm({ producto, productos, categorias, marcas, 
           ...producto,
           categoriaId: String(producto.categoriaId),
           marcaId: String(producto.marcaId),
+          proveedorId: producto.proveedorId ? String(producto.proveedorId) : '',
+          activo: producto.activo !== false,
           precio: String(producto.precio),
           stockMinimo: String(producto.stockMinimo),
         }
@@ -24,7 +26,8 @@ export default function ProductoForm({ producto, productos, categorias, marcas, 
   const [errorGeneral, setErrorGeneral] = useState('');
 
   const cambiar = (campo) => (evento) => {
-    setDatos((anterior) => ({ ...anterior, [campo]: evento.target.value }));
+    const valor = evento.target.type === 'checkbox' ? evento.target.checked : evento.target.value;
+    setDatos((anterior) => ({ ...anterior, [campo]: valor }));
     setErrores((anterior) => ({ ...anterior, [campo]: undefined }));
   };
 
@@ -58,6 +61,8 @@ export default function ProductoForm({ producto, productos, categorias, marcas, 
         sku: datos.sku.trim().toUpperCase(),
         categoriaId: Number(datos.categoriaId),
         marcaId: Number(datos.marcaId),
+        proveedorId: datos.proveedorId ? Number(datos.proveedorId) : null,
+        activo: datos.activo,
         precio: Number(datos.precio),
         stockMinimo: Number(datos.stockMinimo),
       });
@@ -123,6 +128,15 @@ export default function ProductoForm({ producto, productos, categorias, marcas, 
         </div>
         <div className="formulario__fila">
           <Field
+            etiqueta="Proveedor principal"
+            opciones={proveedores
+              .filter((p) => p.activo || String(p.id) === datos.proveedorId)
+              .map((p) => ({ valor: String(p.id), texto: p.nombre }))}
+            placeholderOpcion="Sin proveedor asignado"
+            value={datos.proveedorId}
+            onChange={cambiar('proveedorId')}
+          />
+          <Field
             etiqueta="Stock mínimo"
             type="number"
             inputMode="numeric"
@@ -134,6 +148,11 @@ export default function ProductoForm({ producto, productos, categorias, marcas, 
             placeholder="0"
           />
         </div>
+        {editando && (
+          <label className="formulario__casilla">
+            <input type="checkbox" checked={datos.activo} onChange={cambiar('activo')} /> Producto activo (se puede comprar y vender)
+          </label>
+        )}
         <p className="formulario__nota">
           {editando
             ? `Existencia actual: ${producto.existencia}. La existencia se modifica desde Inventario.`

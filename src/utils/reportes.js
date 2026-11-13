@@ -8,7 +8,7 @@
 import { estadoCotizacion } from '../services/cotizaciones';
 import { estaEnRango } from './fechas';
 import { formatearFecha, formatearFechaHora, formatearPesos } from './formato';
-import { estadoExistencia } from './inventario';
+import { estadoExistencia, estaDisponible } from './inventario';
 
 export const REPORTES = [
   { id: 'ventas', titulo: 'Ventas por periodo', descripcion: 'Total vendido, número de ventas y ticket promedio en el periodo seleccionado.' },
@@ -101,7 +101,7 @@ export function construirReporte(id, datos, rango) {
   if (id === 'inventario-bajo') {
     // Este reporte muestra el estado de HOY, no depende del periodo
     const bajos = datos.productos
-      .filter((p) => estadoExistencia(p).tipo !== 'ok')
+      .filter((p) => estaDisponible(p) && estadoExistencia(p).tipo !== 'ok')
       .sort((a, b) => a.existencia - b.existencia);
     return {
       titulo,

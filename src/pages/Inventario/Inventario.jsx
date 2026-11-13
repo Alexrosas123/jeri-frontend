@@ -6,14 +6,15 @@ import Table from '../../components/Table/Table';
 import useLista from '../../hooks/useLista';
 import { obtenerInventario, registrarMovimiento, usaEjemplo } from '../../services/productos';
 import { formatearFechaHora } from '../../utils/formato';
-import { estadoExistencia } from '../../utils/inventario';
+import { estadoExistencia, estaDisponible, estaVisible } from '../../utils/inventario';
 import MovimientoForm from './MovimientoForm';
 import './Inventario.css';
 
 /** Inventario · RF-08, RF-09, RF-10, RF-17 · CU-06, CU-08, CU-10 · Jira SCRUM-13 */
 export default function Inventario() {
   const { datos, setDatos, cargando, error } = useLista(obtenerInventario, { productos: [], movimientos: [] });
-  const { productos, movimientos } = datos;
+  const { movimientos } = datos;
+  const productos = datos.productos.filter(estaVisible); // los productos eliminados ya no se muestran
 
   const [vista, setVista] = useState('existencias'); // 'existencias' | 'historial'
   const [filtro, setFiltro] = useState('todos'); // 'todos' | 'alerta' | 'agotado'
@@ -32,8 +33,8 @@ export default function Inventario() {
     });
   }, [productos, filtro, busqueda]);
 
-  const porResurtir = productos.filter((p) => estadoExistencia(p).tipo !== 'ok').length;
-  const nombreProducto = (id) => productos.find((p) => p.id === id)?.nombre ?? 'Producto eliminado';
+  const porResurtir = productos.filter((p) => estaDisponible(p) && estadoExistencia(p).tipo !== 'ok').length;
+  const nombreProducto = (id) => datos.productos.find((p) => p.id === id)?.nombre ?? 'Producto';
 
   async function guardarMovimiento(valores) {
     const { producto, movimiento: nuevo } = await registrarMovimiento(valores);
@@ -196,7 +197,7 @@ export default function Inventario() {
         <MovimientoForm
           tipo={movimiento.tipo}
           productoInicial={movimiento.productoId}
-          productos={productos}
+          productos={productos.filter(estaDisponible)}
           alGuardar={guardarMovimiento}
           alCerrar={() => setMovimiento(null)}
         />
