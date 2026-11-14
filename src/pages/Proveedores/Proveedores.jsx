@@ -1,15 +1,21 @@
 import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Badge from '../../components/Badge/Badge';
 import Button from '../../components/Button/Button';
 import ContactoForm from '../../components/ContactoForm/ContactoForm';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import Table from '../../components/Table/Table';
 import useLista from '../../hooks/useLista';
+import { obtenerCatalogo } from '../../services/productos';
 import { proveedores as servicio } from '../../services/proveedores';
+import { estaVisible } from '../../utils/inventario';
 
 /** Proveedores · RF-05 · CU-04 · Jira SCRUM-11 */
 export default function Proveedores() {
   const { datos: lista, setDatos: setLista, cargando, error } = useLista(() => servicio.listar(), []);
+  const { datos: catalogo } = useLista(obtenerCatalogo, { productos: [] });
+  // Cuántos productos surte cada proveedor (sin contar los eliminados)
+  const productosDe = (proveedorId) => catalogo.productos.filter((p) => estaVisible(p) && p.proveedorId === proveedorId).length;
   const [busqueda, setBusqueda] = useState('');
   const [estado, setEstado] = useState('todos');
   const [mensaje, setMensaje] = useState('');
@@ -78,17 +84,18 @@ export default function Proveedores() {
             <th>Proveedor</th>
             <th>Contacto</th>
             <th>Teléfono</th>
+            <th>Productos</th>
             <th>Estado</th>
             <th><span className="solo-lectores">Acciones</span></th>
           </tr>
         </thead>
         <tbody>
           {cargando && (
-            <tr><td colSpan={5} className="tabla__vacia">Cargando proveedores…</td></tr>
+            <tr><td colSpan={6} className="tabla__vacia">Cargando proveedores…</td></tr>
           )}
           {!cargando && visibles.length === 0 && (
             <tr>
-              <td colSpan={5} className="tabla__vacia">
+              <td colSpan={6} className="tabla__vacia">
                 {lista.length === 0 ? 'Aún no hay proveedores registrados.' : 'No hay proveedores que coincidan con la búsqueda.'}
               </td>
             </tr>
@@ -104,6 +111,12 @@ export default function Proveedores() {
                 {p.correo && <p className="texto-secundario">{p.correo}</p>}
               </td>
               <td className="texto-secundario">{p.telefono || '—'}</td>
+              <td>
+                <Link to={`/productos?proveedor=${p.id}`} className="tabla__accion">
+                  {productosDe(p.id)} {productosDe(p.id) === 1 ? 'producto' : 'productos'}
+                  <span className="solo-lectores"> de {p.nombre}</span>
+                </Link>
+              </td>
               <td><Badge tipo={p.activo ? 'ok' : 'neutro'}>{p.activo ? 'Activo' : 'Inactivo'}</Badge></td>
               <td className="celda-accion">
                 <button type="button" className="tabla__accion" onClick={() => setFormulario(p)}>

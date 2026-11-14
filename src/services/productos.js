@@ -10,6 +10,10 @@
     GET/POST  /api/categories
     GET/POST  /api/brands
     GET/POST  /api/inventory/movements
+    DELETE    /api/products/{id}   → borrado lógico: el producto deja de mostrarse, pero se
+                                     conserva para el historial de ventas, compras e inventario
+  Campos nuevos del producto: proveedorId (proveedor principal), activo (false = inhabilitado:
+  no se puede comprar ni vender) y eliminado (true = ya no se muestra).
   Sin VITE_API_URL se usan DATOS DE EJEMPLO que viven mientras la página está abierta.
 */
 
@@ -44,16 +48,18 @@ let marcas = [
   { id: 3, nombre: 'Marca C' },
 ];
 
+// proveedorId = proveedor principal del producto · activo = se puede comprar y vender
 let productos = [
-  { id: 1, sku: 'MC-001', nombre: 'Gasa estéril 10 × 10 cm, paquete', categoriaId: 1, marcaId: 1, precio: 45, existencia: 9, stockMinimo: 25 },
-  { id: 2, sku: 'MC-002', nombre: 'Venda elástica 10 cm', categoriaId: 1, marcaId: 2, precio: 38.5, existencia: 48, stockMinimo: 20 },
-  { id: 3, sku: 'PP-001', nombre: 'Guantes de nitrilo, caja 100 pzas', categoriaId: 2, marcaId: 1, precio: 189, existencia: 0, stockMinimo: 20 },
-  { id: 4, sku: 'PP-002', nombre: 'Cubrebocas tricapa, caja 50 pzas', categoriaId: 2, marcaId: 3, precio: 95, existencia: 12, stockMinimo: 30 },
-  { id: 5, sku: 'DS-001', nombre: 'Jeringa 5 ml, caja 100 pzas', categoriaId: 3, marcaId: 2, precio: 210, existencia: 6, stockMinimo: 15 },
-  { id: 6, sku: 'DS-002', nombre: 'Abatelenguas de madera, caja 500', categoriaId: 3, marcaId: 3, precio: 120, existencia: 35, stockMinimo: 10 },
-  { id: 7, sku: 'ED-001', nombre: 'Termómetro digital', categoriaId: 4, marcaId: 1, precio: 160, existencia: 22, stockMinimo: 5 },
-  { id: 8, sku: 'ED-002', nombre: 'Baumanómetro aneroide', categoriaId: 4, marcaId: 2, precio: 650, existencia: 14, stockMinimo: 5 },
-];
+  { id: 1, sku: 'MC-001', nombre: 'Gasa estéril 10 × 10 cm, paquete', categoriaId: 1, marcaId: 1, proveedorId: 1, precio: 45, existencia: 9, stockMinimo: 25 },
+  { id: 2, sku: 'MC-002', nombre: 'Venda elástica 10 cm', categoriaId: 1, marcaId: 2, proveedorId: 2, precio: 38.5, existencia: 48, stockMinimo: 20 },
+  { id: 3, sku: 'PP-001', nombre: 'Guantes de nitrilo, caja 100 pzas', categoriaId: 2, marcaId: 1, proveedorId: 1, precio: 189, existencia: 0, stockMinimo: 20 },
+  { id: 4, sku: 'PP-002', nombre: 'Cubrebocas tricapa, caja 50 pzas', categoriaId: 2, marcaId: 3, proveedorId: 1, precio: 95, existencia: 12, stockMinimo: 30 },
+  { id: 5, sku: 'DS-001', nombre: 'Jeringa 5 ml, caja 100 pzas', categoriaId: 3, marcaId: 2, proveedorId: 1, precio: 210, existencia: 6, stockMinimo: 15 },
+  { id: 6, sku: 'DS-002', nombre: 'Abatelenguas de madera, caja 500', categoriaId: 3, marcaId: 3, proveedorId: 5, precio: 120, existencia: 35, stockMinimo: 10 },
+  { id: 7, sku: 'ED-001', nombre: 'Termómetro digital', categoriaId: 4, marcaId: 1, proveedorId: 3, precio: 160, existencia: 22, stockMinimo: 5 },
+  { id: 8, sku: 'ED-002', nombre: 'Baumanómetro aneroide', categoriaId: 4, marcaId: 2, proveedorId: 3, precio: 650, existencia: 14, stockMinimo: 5 },
+  { id: 9, sku: 'MC-003', nombre: 'Algodón plisado 300 g', categoriaId: 1, marcaId: 3, proveedorId: 2, precio: 85, existencia: 4, stockMinimo: 10, activo: false },
+].map((p) => ({ activo: true, eliminado: false, ...p }));
 
 // Las fechas de ejemplo se calculan desde hoy para que siempre haya datos en "Este mes" (Reportes)
 let movimientos = [
@@ -77,7 +83,7 @@ export async function obtenerCatalogo() {
 export async function crearProducto(datos) {
   if (!API_URL) {
     await esperar(300);
-    const nuevo = { ...datos, id: Date.now(), existencia: 0 }; // un producto nuevo empieza sin existencias
+    const nuevo = { activo: true, ...datos, id: Date.now(), existencia: 0, eliminado: false }; // un producto nuevo empieza sin existencias
     productos = [...productos, nuevo];
     return nuevo;
   }
@@ -93,6 +99,19 @@ export async function actualizarProducto(id, datos) {
     return actualizado;
   }
   return pedir(`/api/products/${id}`, { method: 'PUT', body: JSON.stringify(datos) });
+}
+
+/**
+ * "Elimina" un producto: deja de mostrarse en el catálogo, pero sigue existiendo
+ * para que las ventas, compras y movimientos anteriores conserven su nombre.
+ */
+export async function eliminarProducto(id) {
+  if (!API_URL) {
+    await esperar(300);
+    productos = productos.map((p) => (p.id === id ? { ...p, eliminado: true, activo: false } : p));
+    return null;
+  }
+  return pedir(`/api/products/${id}`, { method: 'DELETE' });
 }
 
 // ---------- Categorías y marcas ----------

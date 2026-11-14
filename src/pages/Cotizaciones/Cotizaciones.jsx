@@ -17,6 +17,7 @@ import { obtenerCatalogo } from '../../services/productos';
 import { formatearFecha, formatearPesos } from '../../utils/formato';
 import CotizacionDetalle from './CotizacionDetalle';
 import CotizacionForm from './CotizacionForm';
+import { estaDisponible } from '../../utils/inventario';
 import { ESTADOS } from './estados';
 import './Cotizaciones.css';
 
@@ -158,7 +159,7 @@ export default function Cotizaciones() {
       {creando && (
         <CotizacionForm
           clientes={datos.clientes}
-          productos={datos.productos}
+          productos={datos.productos.filter(estaDisponible)}
           alGuardar={guardarNueva}
           alCerrar={() => setCreando(false)}
         />
