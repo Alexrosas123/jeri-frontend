@@ -4,6 +4,7 @@ import Button from '../../components/Button/Button';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import Table from '../../components/Table/Table';
 import { actualizarUsuario, crearUsuario, obtenerUsuariosYRoles } from '../../services/usuarios';
+import { nivelDelRol, PANTALLAS, SOLO_GERENCIA } from '../../utils/permisos';
 import UsuarioForm from './UsuarioForm';
 import './Usuarios.css';
 
@@ -124,7 +125,10 @@ export default function Usuarios() {
                 <p className="usuarios__nombre">{u.nombre}</p>
                 <p className="usuarios__correo">{u.correo}</p>
               </td>
-              <td>{nombreDeRol(u.rolId)}</td>
+              <td>
+                <p>{nombreDeRol(u.rolId)}</p>
+                <p className="texto-secundario">{nivelDelRol(nombreDeRol(u.rolId)) === 'gerencia' ? 'Gerencia · ve todo' : 'Operador'}</p>
+              </td>
               <td>
                 <Badge tipo={u.activo ? 'ok' : 'neutro'}>{u.activo ? 'Activo' : 'Inactivo'}</Badge>
               </td>
@@ -137,6 +141,38 @@ export default function Usuarios() {
           ))}
         </tbody>
       </Table>
+
+      <section className="permisos" aria-labelledby="titulo-permisos">
+        <div>
+          <h2 id="titulo-permisos" className="subtitulo-seccion">Permisos por rol</h2>
+          <p className="formulario__nota">
+            <strong>Gerencia</strong> ({roles.filter((r) => nivelDelRol(r.nombre) === 'gerencia').map((r) => r.nombre).join(', ') || '—'}) ve todo el
+            sistema. <strong>Operador</strong> ({roles.filter((r) => nivelDelRol(r.nombre) === 'operador').map((r) => r.nombre).join(', ') || '—'})
+            no ve las pantallas de gerencia. El nivel depende del rol que le asignes a cada usuario.
+          </p>
+        </div>
+        <Table etiqueta="Permisos por rol">
+          <thead>
+            <tr>
+              <th>Pantalla</th>
+              <th>Gerencia</th>
+              <th>Operador</th>
+            </tr>
+          </thead>
+          <tbody>
+            {PANTALLAS.map((p) => {
+              const soloGerencia = SOLO_GERENCIA.includes(p.ruta);
+              return (
+                <tr key={p.ruta}>
+                  <td className="texto-principal">{p.texto}</td>
+                  <td><Badge tipo="ok">Puede ver</Badge></td>
+                  <td>{soloGerencia ? <Badge tipo="neutro">Sin acceso</Badge> : <Badge tipo="ok">Puede ver</Badge>}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </Table>
+      </section>
 
       {formulario && (
         <UsuarioForm

@@ -5,6 +5,7 @@ import KpiCard from '../../components/KpiCard/KpiCard';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import { obtenerDashboard } from '../../services/dashboard';
 import { formatearPesos } from '../../utils/formato';
+import ClientesIngreso from './ClientesIngreso';
 import './Dashboard.css';
 
 /** Decide la etiqueta de cada alerta según la existencia */
@@ -82,6 +83,7 @@ export default function Dashboard() {
           </section>
         </>
       )}
+      <ClientesIngreso />
     </>
   );
 }

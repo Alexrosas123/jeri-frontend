@@ -69,3 +69,230 @@
   background: var(--color-error-fondo);
   color: var(--color-error-texto);
 }
+
+/* ---- Clientes e ingresos ---- */
+.ingresos {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ingresos__encabezado {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.ingresos__encabezado h2 {
+  font-size: 20px;
+}
+
+.ingresos__rejilla {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .ingresos__rejilla {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.ingresos__tarjeta {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 22px 24px;
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-tarjeta);
+  min-width: 0;
+}
+
+.ingresos__tarjeta--top {
+  grid-row: span 2;
+}
+
+.ingresos__tarjeta h3 {
+  font-size: 17px;
+}
+
+.ingresos__subtitulo {
+  margin-top: 8px;
+  font-size: 15px;
+}
+
+.ingresos__cifra {
+  font-size: 15px;
+}
+
+.ingresos__cifra strong {
+  font-size: 28px;
+  margin-right: 4px;
+}
+
+.ingresos__lista {
+  margin: 0;
+  padding-left: 18px;
+  columns: 2 160px;
+  column-gap: 16px;
+}
+
+.ingresos__lista li {
+  padding: 3px 0;
+  break-inside: avoid;
+}
+
+/* Barras horizontales del top 10 (una sola serie, un solo color) */
+.barras {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.barras__fila {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+}
+
+.barras__lugar {
+  font-family: var(--fuente-mono);
+  font-size: 14px;
+  color: var(--color-texto-suave);
+  padding-top: 2px;
+}
+
+.barras__cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.barras__texto {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.barras__nombre {
+  font-weight: 600;
+  color: var(--color-texto);
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.barras__nombre:hover {
+  color: var(--color-primario);
+  text-decoration: underline;
+}
+
+.barras__valor {
+  font-family: var(--fuente-mono);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.barras__pista {
+  height: 14px;
+}
+
+.barras__barra {
+  display: block;
+  height: 100%;
+  background: var(--color-primario);
+  border-radius: 0 4px 4px 0; /* esquina redonda solo en la punta, recta en la base */
+}
+
+.barras__fila:hover .barras__barra {
+  background: var(--color-primario-hover);
+}
+
+/* Medidor: clientes que compraron de los clientes activos */
+.medidor {
+  height: 14px;
+  border-radius: 999px;
+  background: var(--color-borde);
+  overflow: hidden;
+}
+
+.medidor__relleno {
+  display: block;
+  height: 100%;
+  background: var(--color-primario);
+  border-radius: 999px;
+}
+
+/* Columnas: ingresos por mes */
+.columnas {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+  align-items: end;
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.columnas__mes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.columnas__valor {
+  font-family: var(--fuente-mono);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.columnas__pista {
+  width: 100%;
+  height: 140px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.columnas__barra {
+  display: block;
+  width: min(100%, 24px);
+  background: var(--color-primario);
+  border-radius: 4px 4px 0 0;
+  opacity: 0.55;
+}
+
+.columnas__barra--actual {
+  opacity: 1;
+}
+
+.columnas__mes:hover .columnas__barra {
+  opacity: 1;
+}
+
+.columnas__etiqueta {
+  font-size: 12px;
+  color: var(--color-texto-suave);
+  text-align: center;
+  padding-bottom: 6px;
+}
+
+@media (max-width: 520px) {
+  .columnas__valor {
+    font-size: 10px;
+  }
+}

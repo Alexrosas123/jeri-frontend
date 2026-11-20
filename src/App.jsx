@@ -13,6 +13,9 @@ import Compras from './pages/Compras/Compras';
 import Ventas from './pages/Ventas/Ventas';
 import Cotizaciones from './pages/Cotizaciones/Cotizaciones';
 import Reportes from './pages/Reportes/Reportes';
+import Promociones from './pages/Promociones/Promociones';
+import Devoluciones from './pages/Devoluciones/Devoluciones';
+import Administracion from './pages/Administracion/Administracion';
 
 export default function App() {
   return (
@@ -32,6 +35,9 @@ export default function App() {
         <Route path="compras" element={<Compras />} />
         <Route path="ventas" element={<Ventas />} />
         <Route path="cotizaciones" element={<Cotizaciones />} />
+        <Route path="promociones" element={<Promociones />} />
+        <Route path="devoluciones" element={<Devoluciones />} />
+        <Route path="administracion" element={<Administracion />} />
         <Route path="reportes" element={<Reportes />} />
       </Route>
 
