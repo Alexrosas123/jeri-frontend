@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import Badge from '../../components/Badge/Badge';
 import BuscadorProductos from '../../components/BuscadorProductos/BuscadorProductos';
 import Button from '../../components/Button/Button';
 import Field from '../../components/Field/Field';
@@ -8,19 +9,26 @@ import Table from '../../components/Table/Table';
 import useLista from '../../hooks/useLista';
 import { clientes, direccionesDe } from '../../services/clientes';
 import { obtenerInventario } from '../../services/productos';
+import { aplicarDescuento, listarPromociones, mejorPromocion } from '../../services/promociones';
 import { listarVentas, registrarVenta, usaEjemplo } from '../../services/ventas';
 import { formatearFecha, formatearPesos, totalDeLineas } from '../../utils/formato';
 import { estaDisponible } from '../../utils/inventario';
 
 async function cargarPantalla() {
-  const [listaClientes, inventario, ventas] = await Promise.all([clientes.listar(), obtenerInventario(), listarVentas()]);
-  return { clientes: listaClientes, productos: inventario.productos, ventas };
+  const [listaClientes, inventario, ventas, promociones] = await Promise.all([
+    clientes.listar(),
+    obtenerInventario(),
+    listarVentas(),
+    listarPromociones(),
+  ]);
+  return { clientes: listaClientes, productos: inventario.productos, ventas, promociones };
 }
 
 /** Si venimos de "Convertir en venta" (Cotizaciones), la venta empieza con esos datos. */
 function formularioInicial(cotizacion) {
-  if (!cotizacion) return { clienteId: '', direccion: null, lineas: [], cotizacion: null };
+  if (!cotizacion) return { tipo: 'normal', clienteId: '', direccion: null, lineas: [], cotizacion: null };
   return {
+    tipo: 'normal',
     clienteId: String(cotizacion.clienteId),
     direccion: null, // null = la primera dirección del cliente
     lineas: cotizacion.lineas.map((l) => ({ ...l, cantidad: String(l.cantidad) })),
@@ -32,7 +40,7 @@ function formularioInicial(cotizacion) {
 export default function Ventas() {
   const ubicacion = useLocation();
   const navegar = useNavigate();
-  const { datos, setDatos, cargando, error } = useLista(cargarPantalla, { clientes: [], productos: [], ventas: [] });
+  const { datos, setDatos, cargando, error } = useLista(cargarPantalla, { clientes: [], productos: [], ventas: [], promociones: [] });
   const [formulario, setFormulario] = useState(() => formularioInicial(ubicacion.state?.cotizacion));
   const [errores, setErrores] = useState({});
   const [buscando, setBuscando] = useState(false);
@@ -45,9 +53,27 @@ export default function Ventas() {
   // Direcciones de entrega del cliente elegido; si no se ha escogido una, se usa la primera
   const direcciones = direccionesDe(datos.clientes.find((c) => String(c.id) === formulario.clienteId));
   const direccionElegida = formulario.direccion ?? direcciones[0] ?? '';
-  // En el formulario la cantidad es texto (lo que escribe el usuario); para sumar la convertimos a número
-  const lineasNumericas = formulario.lineas.map((l) => ({ ...l, cantidad: Number(l.cantidad) || 0 }));
+  // En el formulario la cantidad es texto y `precio` es el precio de lista.
+  // Aquí se calcula cada línea con número, descuento (si es venta con promoción) y precio final.
+  const conPromocion = formulario.tipo === 'promocion';
+  const lineasNumericas = formulario.lineas.map((l) => {
+    const promocion = conPromocion ? mejorPromocion(datos.promociones, Number(formulario.clienteId), l.productoId) : null;
+    const descuento = promocion?.porcentaje ?? 0;
+    return {
+      productoId: l.productoId,
+      cantidad: Number(l.cantidad) || 0,
+      precioLista: l.precio,
+      descuento,
+      promocionId: promocion?.id ?? null,
+      precio: aplicarDescuento(l.precio, descuento),
+      promocion,
+    };
+  });
   const total = totalDeLineas(lineasNumericas);
+  const subtotal = lineasNumericas.reduce((s, l) => s + l.cantidad * l.precioLista, 0);
+  const ahorro = Math.round((subtotal - total) * 100) / 100;
+  const ningunaAplica = conPromocion && Boolean(formulario.clienteId) && lineasNumericas.length > 0 && ahorro === 0;
+  const calculada = (productoId) => lineasNumericas.find((l) => l.productoId === productoId);
 
   function limpiar() {
     setFormulario(formularioInicial(null));
@@ -110,14 +136,22 @@ export default function Ventas() {
     try {
       const venta = await registrarVenta({
         clienteId: Number(formulario.clienteId),
-        lineas: lineasNumericas,
+        lineas: lineasNumericas.map((l) => {
+          const linea = { ...l };
+          delete linea.promocion; // `promocion` solo sirve para mostrarla en pantalla
+          return linea;
+        }),
         cotizacionId: formulario.cotizacion?.id,
         direccionEntrega: direccionElegida,
       });
       const { productos } = await obtenerInventario();
       setDatos((anterior) => ({ ...anterior, productos, ventas: [venta, ...anterior.ventas] }));
       limpiar();
-      setMensaje({ tipo: 'exito', texto: `Se registró la venta ${venta.folio} por ${formatearPesos(venta.total)}. El inventario ya se actualizó.` });
+      const detalle = venta.tipo === 'promocion' ? ` con promoción (descuento de ${formatearPesos(venta.descuentoTotal)})` : '';
+      setMensaje({
+        tipo: 'exito',
+        texto: `Se registró la venta ${venta.folio}${detalle} por ${formatearPesos(venta.total)}. El inventario ya se actualizó.`,
+      });
     } catch (err) {
       setMensaje({ tipo: 'error', texto: err.message });
     } finally {
@@ -169,6 +203,32 @@ export default function Ventas() {
           )}
         </div>
 
+        <fieldset className="operacion__tipo">
+          <legend className="campo__etiqueta">Tipo de venta</legend>
+          <div className="segmentado">
+            {[
+              ['normal', 'Venta normal'],
+              ['promocion', 'Venta con promoción'],
+            ].map(([valor, texto]) => (
+              <label key={valor} className={`segmentado__opcion ${formulario.tipo === valor ? 'segmentado__opcion--activa' : ''}`}>
+                <input
+                  type="radio"
+                  name="tipo-venta"
+                  value={valor}
+                  checked={formulario.tipo === valor}
+                  onChange={() => setFormulario((anterior) => ({ ...anterior, tipo: valor }))}
+                />
+                {texto}
+              </label>
+            ))}
+          </div>
+          <p className="formulario__nota" aria-live="polite">
+            {!conPromocion && 'Se cobra el precio de lista.'}
+            {conPromocion && !ningunaAplica && 'Se aplican automáticamente las promociones vigentes para este cliente y estos productos.'}
+            {ningunaAplica && 'Ninguna promoción vigente aplica a este cliente y estos productos: se registrará como venta normal.'}
+          </p>
+        </fieldset>
+
         <div className="tabla__desplazable">
           <table aria-label="Productos de la venta">
             <thead>
@@ -189,14 +249,21 @@ export default function Ventas() {
               )}
               {formulario.lineas.map((l) => {
                 const p = producto(l.productoId);
+                const c = calculada(l.productoId);
                 const errorLinea = errores[`linea-${l.productoId}`];
                 return (
                   <tr key={l.productoId}>
                     <td>
                       <p className="texto-principal">{p?.nombre ?? 'Producto'}</p>
                       <p className="texto-secundario">
-                        {formatearPesos(l.precio)} c/u · Disponibles: {p?.existencia ?? '—'}
+                        {c.descuento > 0 && <s className="precio-anterior">{formatearPesos(c.precioLista)}</s>}{' '}
+                        {formatearPesos(c.precio)} c/u · Disponibles: {p?.existencia ?? '—'}
                       </p>
+                      {c.promocion && (
+                        <p className="texto-secundario">
+                          <Badge tipo="info">−{c.descuento} %</Badge> {c.promocion.nombre}
+                        </p>
+                      )}
                     </td>
                     <td className="celda-numero">
                       <label htmlFor={`cantidad-${l.productoId}`} className="solo-lectores">Cantidad de {p?.nombre}</label>
@@ -213,7 +280,7 @@ export default function Ventas() {
                       />
                       {errorLinea && <p className="campo__error">{errorLinea}</p>}
                     </td>
-                    <td className="celda-numero texto-mono">{formatearPesos((Number(l.cantidad) || 0) * l.precio)}</td>
+                    <td className="celda-numero texto-mono">{formatearPesos(c.cantidad * c.precio)}</td>
                     <td className="celda-accion">
                       <button
                         type="button"
@@ -239,6 +306,11 @@ export default function Ventas() {
 
         <div className="operacion__pie">
           <div>
+            {ahorro > 0 && (
+              <p className="operacion__desglose">
+                Subtotal {formatearPesos(subtotal)} · Descuento <strong>−{formatearPesos(ahorro)}</strong>
+              </p>
+            )}
             <span className="operacion__total-etiqueta">Total (IVA incluido)</span>
             <span className="operacion__total">{formatearPesos(total)}</span>
           </div>
@@ -261,23 +333,30 @@ export default function Ventas() {
             <th>Cliente</th>
             <th>Fecha</th>
             <th className="celda-numero">Total</th>
+            <th>Tipo</th>
             <th>Origen</th>
           </tr>
         </thead>
         <tbody>
-          {cargando && <tr><td colSpan={5} className="tabla__vacia">Cargando ventas…</td></tr>}
+          {cargando && <tr><td colSpan={6} className="tabla__vacia">Cargando ventas…</td></tr>}
           {!cargando && datos.ventas.length === 0 && (
-            <tr><td colSpan={5} className="tabla__vacia">Aún no hay ventas registradas.</td></tr>
+            <tr><td colSpan={6} className="tabla__vacia">Aún no hay ventas registradas.</td></tr>
           )}
-          {datos.ventas.map((v) => (
-            <tr key={v.id}>
-              <td className="texto-mono">{v.folio}</td>
-              <td className="texto-principal">{nombreCliente(v.clienteId)}</td>
-              <td className="texto-secundario">{formatearFecha(v.fecha)}</td>
-              <td className="celda-numero texto-mono">{formatearPesos(v.total)}</td>
-              <td className="texto-secundario">{v.cotizacionId ? 'Desde cotización' : 'Directa'}</td>
-            </tr>
-          ))}
+          {[...datos.ventas]
+            .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
+            .slice(0, 10)
+            .map((v) => (
+              <tr key={v.id}>
+                <td className="texto-mono">{v.folio}</td>
+                <td className="texto-principal">{nombreCliente(v.clienteId)}</td>
+                <td className="texto-secundario">{formatearFecha(v.fecha)}</td>
+                <td className="celda-numero texto-mono">{formatearPesos(v.total)}</td>
+                <td>
+                  {v.tipo === 'promocion' ? <Badge tipo="info">Con promoción</Badge> : <Badge tipo="neutro">Normal</Badge>}
+                </td>
+                <td className="texto-secundario">{v.cotizacionId ? 'Desde cotización' : 'Directa'}</td>
+              </tr>
+            ))}
         </tbody>
       </Table>
 

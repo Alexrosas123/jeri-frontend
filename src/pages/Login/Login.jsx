@@ -3,8 +3,17 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import Button from '../../components/Button/Button';
 import Field from '../../components/Field/Field';
 import Logo from '../../components/Logo/Logo';
-import { iniciarSesion, obtenerSesion } from '../../services/auth';
+import { iniciarSesion, obtenerSesion, sesionDePrueba } from '../../services/auth';
+import { rutaInicial } from '../../utils/permisos';
 import './Login.css';
+
+// Roles para entrar en modo de prueba (sin back-end)
+const ROLES_DE_PRUEBA = [
+  { valor: 'Administrador', texto: 'Administrador (gerencia: ve todo)' },
+  { valor: 'Dirección / Gerencia', texto: 'Dirección / Gerencia (ve todo)' },
+  { valor: 'Ventas', texto: 'Ventas (operador: sin Dashboard)' },
+  { valor: 'Compras', texto: 'Compras (operador: sin Dashboard)' },
+];
 
 // Revisa que el correo tenga forma "algo@algo.algo"
 const FORMATO_CORREO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -30,9 +39,11 @@ export default function Login() {
   const [errores, setErrores] = useState({});
   const [errorGeneral, setErrorGeneral] = useState('');
   const [enviando, setEnviando] = useState(false);
+  const [rolDePrueba, setRolDePrueba] = useState('Administrador');
 
   // Si ya hay sesión, no tiene caso mostrar el login
-  if (obtenerSesion()) return <Navigate to="/dashboard" replace />;
+  const sesion = obtenerSesion();
+  if (sesion) return <Navigate to={rutaInicial(sesion)} replace />;
 
   async function alEnviar(evento) {
     evento.preventDefault(); // evita que la página se recargue
@@ -44,8 +55,8 @@ export default function Login() {
 
     setEnviando(true);
     try {
-      await iniciarSesion(correo.trim(), contrasena);
-      navegar('/dashboard');
+      const nueva = await iniciarSesion(correo.trim(), contrasena, rolDePrueba);
+      navegar(rutaInicial(nueva));
     } catch (error) {
       setErrorGeneral(error.message);
     } finally {
@@ -111,6 +122,16 @@ export default function Login() {
               </button>
             }
           />
+
+          {sesionDePrueba && (
+            <Field
+              etiqueta="Entrar como (modo de prueba)"
+              opciones={ROLES_DE_PRUEBA}
+              placeholderOpcion="Seleccionar rol"
+              value={rolDePrueba}
+              onChange={(e) => setRolDePrueba(e.target.value || 'Administrador')}
+            />
+          )}
 
           <div className="login__opciones">
             <label className="login__recordarme">

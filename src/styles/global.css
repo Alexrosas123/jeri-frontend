@@ -419,3 +419,73 @@ textarea {
 .direcciones__agregar {
   align-self: flex-start;
 }
+
+/* ---- Tipo de venta: normal o con promoción ---- */
+.operacion__tipo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 16px 20px;
+  border: none;
+  border-bottom: 1px solid var(--color-borde);
+  min-width: 0;
+}
+
+.operacion__tipo legend {
+  float: left;
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 0;
+}
+
+/* Botones segmentados (dos o más opciones, una activa) */
+.segmentado {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 12px;
+  background: var(--color-superficie-encabezado);
+  border: 1px solid var(--color-borde);
+  align-self: flex-start;
+}
+
+.segmentado__opcion {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-texto-suave);
+  cursor: pointer;
+}
+
+.segmentado__opcion input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.segmentado__opcion:has(input:focus-visible) {
+  outline: 2px solid var(--color-primario);
+  outline-offset: 2px;
+}
+
+.segmentado__opcion--activa {
+  background: var(--color-superficie);
+  color: var(--color-texto);
+  box-shadow: 0 1px 3px rgba(19, 38, 58, 0.15);
+}
+
+.precio-anterior {
+  color: var(--color-texto-suave);
+}
+
+.operacion__desglose {
+  font-size: 14px;
+  color: var(--color-texto-suave);
+  margin-bottom: 4px;
+}

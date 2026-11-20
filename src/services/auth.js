@@ -14,11 +14,15 @@
 const API_URL = import.meta.env.VITE_API_URL;
 const CLAVE_SESION = 'medidental-sesion';
 
-export async function iniciarSesion(correo, contrasena) {
+/**
+ * `rolDePrueba` solo se usa en modo de prueba (sin back-end) para entrar como
+ * gerencia u operador y revisar los permisos. Con back-end, el rol lo decide el servidor.
+ */
+export async function iniciarSesion(correo, contrasena, rolDePrueba = 'Administrador') {
   // --- Simulación (sin back-end) ---
   if (!API_URL) {
     await new Promise((resolver) => setTimeout(resolver, 800));
-    const sesion = { nombre: 'Usuario de ejemplo', rol: 'Administrador', correo, simulada: true };
+    const sesion = { nombre: 'Usuario de ejemplo', rol: rolDePrueba, correo, simulada: true };
     guardarSesion(sesion);
     return sesion;
   }
@@ -40,6 +44,9 @@ export async function iniciarSesion(correo, contrasena) {
   guardarSesion(sesion);
   return sesion;
 }
+
+/** true si no hay back-end configurado (inicio de sesión de prueba) */
+export const sesionDePrueba = !API_URL;
 
 export function obtenerSesion() {
   try {
