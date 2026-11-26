@@ -1,12 +1,14 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import Logo from '../Logo/Logo';
 import { cerrarSesion, obtenerSesion } from '../../services/auth';
+import usePermisos from '../../hooks/usePermisos';
 import { nivelDelRol, nombreDelRol, pantallasPermitidas } from '../../utils/permisos';
 import './Sidebar.css';
 
 
 /** Menú lateral del sistema (componente "Barra lateral" en Figma). */
 export default function Sidebar() {
+  usePermisos(); // vuelve a dibujar el menú si cambian los permisos
   const navegar = useNavigate();
   const sesion = obtenerSesion();
 

@@ -71,3 +71,39 @@
   gap: 12px;
   max-width: 720px;
 }
+
+.permisos__encabezado {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.permisos td {
+  vertical-align: middle;
+}
+
+/* En celular: celdas y switches más compactos para que quepan las dos columnas */
+@media (max-width: 520px) {
+  .permisos .tabla th,
+  .permisos .tabla td {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .permisos .switch {
+    width: 64px;
+    height: 30px;
+    font-size: 12px;
+  }
+
+  .permisos .switch__perilla {
+    width: 22px;
+    height: 22px;
+  }
+
+  .permisos .switch--on .switch__perilla {
+    left: calc(100% - 26px);
+  }
+}

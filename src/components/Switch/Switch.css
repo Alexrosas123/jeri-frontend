@@ -1,0 +1,71 @@
+/* Interruptor ON (verde) / OFF (rojo) */
+.switch {
+  --switch-verde: #157f3f;
+  --switch-rojo: #b42318;
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 76px;
+  height: 34px;
+  padding: 0 10px;
+  border: none;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.switch--on {
+  background: var(--switch-verde);
+  justify-content: flex-start;
+}
+
+.switch--off {
+  background: var(--switch-rojo);
+  justify-content: flex-end;
+}
+
+/* La perilla blanca va a la derecha cuando está prendido y a la izquierda cuando está apagado */
+.switch__perilla {
+  position: absolute;
+  top: 4px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: left 0.15s ease;
+}
+
+.switch--on .switch__perilla {
+  left: calc(100% - 30px);
+}
+
+.switch--off .switch__perilla {
+  left: 4px;
+}
+
+.switch:focus-visible {
+  outline: 3px solid var(--color-primario);
+  outline-offset: 2px;
+}
+
+.switch:hover:not(.switch--bloqueado) {
+  filter: brightness(1.08);
+}
+
+.switch--bloqueado {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .switch,
+  .switch__perilla {
+    transition: none;
+  }
+}

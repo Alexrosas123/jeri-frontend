@@ -1,5 +1,6 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import Sidebar from '../components/Sidebar/Sidebar';
+import usePermisos from '../hooks/usePermisos';
 import { obtenerSesion } from '../services/auth';
 import { puedeVer, rutaInicial } from '../utils/permisos';
 import './AppLayout.css';
@@ -12,6 +13,7 @@ import './AppLayout.css';
  */
 export default function AppLayout() {
   const ubicacion = useLocation();
+  usePermisos(); // si apagan la pantalla actual, se revisa de nuevo el acceso
   const sesion = obtenerSesion();
 
   if (!sesion) {
