@@ -14,6 +14,16 @@
 const API_URL = import.meta.env.VITE_API_URL;
 const CLAVE_SESION = 'medidental-sesion';
 
+async function hashearContrasena(texto) {
+  if (!texto || !globalThis.crypto?.subtle) return texto;
+  const bytes = new TextEncoder().encode(texto);
+  const buffer = await globalThis.crypto.subtle.digest('SHA-256', bytes);
+  const hex = Array.from(new Uint8Array(buffer))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+  return `$sha256$${hex}`;
+}
+
 /**
  * `rolDePrueba` solo se usa en modo de prueba (sin back-end) para entrar como
  * gerencia u operador y revisar los permisos. Con back-end, el rol lo decide el servidor.
@@ -27,11 +37,13 @@ export async function iniciarSesion(correo, contrasena, rolDePrueba = 'Administr
     return sesion;
   }
 
+  const passwordHash = await hashearContrasena(contrasena);
+
   // --- Conexión real con el back-end ---
   const respuesta = await fetch(`${API_URL}/api/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: correo, password: contrasena }),
+    body: JSON.stringify({ email: correo, password: passwordHash }),
   });
 
   if (!respuesta.ok) {
